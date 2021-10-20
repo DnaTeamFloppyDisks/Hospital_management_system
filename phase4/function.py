@@ -78,3 +78,6 @@ def admin(con,cur):
                 print("Error is ",er)
         elif inp==5:
             return 1
+        
+        else :
+            print("Enter correct input")
