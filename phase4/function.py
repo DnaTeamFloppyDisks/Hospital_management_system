@@ -1,7 +1,6 @@
 import datetime
 def admin(con,cur):
-    check=True
-    while(check==True):
+    while(True):
         print("Press 1 to see all data")
         print("Press 2 to insert new tuple")
         print("Press 3 to update a tuple")
