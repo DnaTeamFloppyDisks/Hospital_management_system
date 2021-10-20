@@ -2,8 +2,7 @@ import pymysql
 import datetime
 import pymysql.cursors
 from function import *
-# Please enter your own password as a string and user afaik will be root only dont change rest of the stuff ig
-con = pymysql.connect(host='localhost',user='root',password=password,db='hospital',cursorclass=pymysql.cursors.DictCursor)
+con = pymysql.connect(host='localhost',user='root',password='123',db='hospital',cursorclass=pymysql.cursors.DictCursor)
 if(con.open):
     print("Connected")
 else:
@@ -32,3 +31,15 @@ command=int(input("Enter your preference:-"))
 print(command)
 if command==1:
     admin(con,cur)
+elif command==2:
+    users(con,cur)
+elif command==3:
+    pass
+elif command==4:
+    tel_no_users(con,cur)
+elif command==5:
+    address_users(con,cur)
+elif command==6:
+    pass
+elif command==7:
+    permission(con,cur)
