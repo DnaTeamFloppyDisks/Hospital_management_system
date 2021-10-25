@@ -339,7 +339,7 @@ def address_users(con,cur):
                 try:
                     d={}
                     key=input("Enter id to modify ")
-                    q="Delete from address_users where users_if=%s" 
+                    q="Delete from address_users where users_id=%s" 
                     cur.execute(q,(key))
                     con.commit()
                     print("Success")
@@ -349,3 +349,5 @@ def address_users(con,cur):
                 return 1
             else :
                 print("Enter correct input")
+def controls(con,cur):
+    pass
