@@ -351,3 +351,66 @@ def address_users(con,cur):
                 print("Enter correct input")
 def controls(con,cur):
     pass
+# For derived attrbutes
+def costForMedicine(con,cur):
+    while(True):
+        print("Press 1 to check cost")
+        print("Press 2 to return")
+
+        inp=input("Enter command ")
+        if(inp=='1'):
+            try:
+                key=input("Enter medicine id for which to check cost ")
+                q="select m_name as 'Name',mrp*(100-discount)/100 as 'Cost' from medicine where m_id=%s"
+                cur.execute(q,(key))
+                ans=cur.fetchone()
+                print(ans)
+            except Exception as er:
+                            print("Error is ",er)     
+        elif inp=='2':
+            return 1
+        else:
+            print("Enter correct input")
+
+def findAge(con,cur):
+     while(True):
+        print("Press 1 to check age")
+        print("Press 2 to return")
+
+        inp=input("Enter command ")
+        if(inp=='1'):
+            try:
+                key=input("Enter user id for which to check age in years ")
+                q="SELECT first_name,last_name,TIMESTAMPDIFF(YEAR, dob, CURDATE()) AS age from users where id=%s"
+                cur.execute(q,(key))
+                ans=cur.fetchone()
+                print(ans)
+            except Exception as er:
+                            print("Error is ",er)     
+        elif inp=='2':
+            return 1
+        else:
+            print("Enter correct input")
+# Report analysis:-
+def report1(con,cur):
+    print("This is Report 1 which finds total medicine cost used by each patient along with patients details using JOIN technique")
+    while(True):
+        print("Press 1 to check Report")
+        print("Press 2 to return")
+        inp=input("Enter command ")
+        if inp=='1':   
+            key=input("Enter Patient id to generate report for ")
+            try:
+                q1="Select SUM(Cost) FROM (Select p_id from patient where p_id=%s) as A INNER JOIN (Select * from medicalRecord) as B INNER JOIN (Select m_id,m_name,mrp*(100-discount)/100 as 'Cost' from medicine) as C ON B.m_id=C.m_id ON A.p_id=B.p_id"
+                q2="Select first_name,last_name from users where id=%s"
+                cur.execute(q1,(key))
+                ans1=cur.fetchone()
+                cur.execute(q2,(key))
+                ans2=cur.fetchone()
+                print(ans2,ans1)
+            except Exception as er:                
+                print("Error is ",er)     
+        elif inp=='2':
+            return 1
+        else:
+            print("Enter correct input")
