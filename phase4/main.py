@@ -27,8 +27,11 @@ while(True):
     print("15 to generate the second report which generates the patient details under a specific doctor")
     print("16 for department")
     print("17 to exit the user interface")
-    command=int(input("Enter your preference:-"))
-    print(command)
+    command=input("Enter your preference:-")
+    if command=='':
+        print("Enter correct command")
+        continue
+    command=int(command)
     if command==1:
         admin(con,cur)
     elif command==2:
@@ -65,3 +68,5 @@ while(True):
     elif command==17:
         print("Bye")
         exit()
+    else :
+        print("Enter correct command")
