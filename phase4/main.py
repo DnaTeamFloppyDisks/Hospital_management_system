@@ -25,7 +25,8 @@ while(True):
     print("13 to check age for a user")
     print("14 to generate Report 1 which finds total medicine cost used by each patient along with patients names using JOIN technique")
     print("15 to generate the second report which generates the patient details under a specific doctor")
-    print("16 to exit the user interface")
+    print("16 for department")
+    print("17 to exit the user interface")
     command=int(input("Enter your preference:-"))
     print(command)
     if command==1:
@@ -38,7 +39,7 @@ while(True):
     elif command==4:
         address_users(con,cur)
     elif command==5:
-        pass
+        doctor(con,cur)
     elif command==6:
         permission(con,cur)
     elif command==7:
@@ -50,7 +51,7 @@ while(True):
     elif command==10:
         treatment(con,cur)
     elif command==11: 
-        treatment(con,cur)
+        medicalRecord(con,cur)
     elif command==12:
         costForMedicine(con,cur)
     elif command==13:
@@ -60,5 +61,7 @@ while(True):
     elif command==15:
         report2(con,cur)
     elif command==16:
+        department(con,cur)
+    elif command==17:
         print("Bye")
         exit()
