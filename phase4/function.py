@@ -1,4 +1,3 @@
-import datetime
 def admin(con,cur):
     while(True):
         print("Press 1 to see all data")
@@ -108,7 +107,7 @@ def users(con,cur):
                         d["dob"]=input("Enter dob ")
                         d["per_id"]=input("Enter permission id ")
                         d["emailID"]=input("Enter Email id ")
-                        q="Insert into users values(%s,%s,%s,%s,'%s',%s,%s,%s)"
+                        q="Insert into users values(%s,%s,%s,%s,%s,%s,%s,%s)"
                         cur.execute(q,(d["id"],d["f_n"],d["m_n"],d["l_n"],d["gender"],d["dob"],d["per_id"],d["emailID"]))
                         con.commit()
                         print("Success")
@@ -118,12 +117,13 @@ def users(con,cur):
                 try:
                         d={}
                         key=input("Enter id to modify ")
-                        q="Select * from admin where id=%s" %(key);
+                        q="Select * from users where id=%s" %(key);
                         cur.execute(q)
                         ans=cur.fetchone()
+                        
                         print("If you don't want to modify the column,press ENTER")
                         d["id"]=input("Enter id ")
-                        if[d["id"]==""]:
+                        if(d["id"]==""):
                             d["id"]=ans["id"]
                         d["f_n"]=input("Enter first name ")
                         if(d["f_n"]==""):
@@ -197,7 +197,7 @@ def permission(con,cur):
                 try:
                     d={}
                     key=input("Enter per_id to modify ")
-                    q="Select * from admin where id=%s" ;
+                    q="Select * from permission where id=%s" ;
                     cur.execute(q,(key))
                     ans=cur.fetchone()
                     print("If you don't want to modify the column,press ENTER")
@@ -437,7 +437,7 @@ def patient(con,cur):
             elif inp==2:
                 try:
                     d={}
-                    d["p_id"]=input("Enter patient id")
+                    d["p_id"]=input("Enter patient id ")
                     d["adm_date"]=(input("Enter date"))
                     d["complaints"]=(input("Enter complaints"))
                     q="Insert into patient values(%s,%s,%s)" 
@@ -486,7 +486,7 @@ def patient(con,cur):
             elif inp==5:
                 try:
                     key=input("Enter key to search")
-                    q= "Select first_name  FROM ((Select * from users  ) as A INNER JOIN (Select * from patient ) as B ON A.id=B.p_id) where first_name like '%s%%' "  % (key)
+                    q= "Select DISTINCT(first_name)  FROM ((Select * from users  ) as A INNER JOIN (Select * from patient ) as B ON A.id=B.p_id) where first_name like '%s%%' "  % (key)
                     cur.execute(q)
                     answer = cur.fetchall()
                     for i in answer:
@@ -541,7 +541,7 @@ def doctor(con,cur):
                 d["doc_ssn"]=input("Enter doctor ssn ")
                 d["dep_id"]=input("Enter department id ")
                 d["salary"]=input("Enter salary ")
-                q="Insert into admin values(%s,%s,%s,%s)" 
+                q="Insert into doctor values(%s,%s,%s,%s)" 
              
                 cur.execute(q,(d["doc_id"],d["doc_ssn"],d["dep_id"],d["salary"]))
                 con.commit()
@@ -569,7 +569,7 @@ def doctor(con,cur):
                 if d["salary"]=="":
                     d["salary"]=ans["salary"]
                 
-                q="UPDATE admin set doc_id=%s,doc_ssn=%s,dep_id=%s,salary=%s where doc_id=%s" 
+                q="UPDATE doctor set doc_id=%s,doc_ssn=%s,dep_id=%s,salary=%s where doc_id=%s" 
              
                 cur.execute(q,(d["doc_id"],d["doc_ssn"],d["dep_id"],d["salary"],key))
                 con.commit()
@@ -819,7 +819,27 @@ def report2(con,cur):
                 q1="Select DISTINCT(p_id),first_name as 'patient_first_name',last_name as 'patient_last_name',doc_id,complaints,adm_date FROM ( (Select doc_id,p_id as 'ap_id' from medicalRecord where doc_id=%s ) as A INNER JOIN (Select * from patient ) as B ON A.ap_id=B.p_id INNER JOIN (SELECT * from users ) as C ON C.id=B.p_id );"
                 cur.execute(q1,(key))
                 ans1=cur.fetchall()
-                print(ans1)
+                for i in ans1:
+                        print(i)
+            except Exception as er:                
+                print("Error is ",er)     
+        elif inp=='2':
+            return 1
+        else:
+            print("Enter correct input")
+def report3(con,cur):
+    print("This report generates  the average expenses born by people suffering from a disease.")
+    while(True):
+        print("Press 1 to check Report")
+        print("Press 2 to return")
+        inp=input("Enter command ")
+        if inp=='1':   
+            try:
+                q1="Select AVG(mrp*(100-discount)/100) as 'Average Cost',disease from (( Select m_id as am_id,disease from medicalRecord) as A  INNER JOIN (Select * from medicine) as B ON A.am_id=B.m_id ) GROUP BY (disease);"
+                cur.execute(q1)
+                ans1=cur.fetchall()
+                for i in ans1:
+                        print(i)
             except Exception as er:                
                 print("Error is ",er)     
         elif inp=='2':
