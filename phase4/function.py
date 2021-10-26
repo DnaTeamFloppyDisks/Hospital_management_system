@@ -373,8 +373,8 @@ def treatment(con,cur):
             elif inp==2:
                 try:
                     d={}
-                    d["users_id"]=input("Enter treatment id")
-                    d["treatment"]=(input("Enter treatment name"))
+                    d["users_id"]=input("Enter treatment id ")
+                    d["treatment"]=(input("Enter treatment name "))
                     q="Insert into treatment values(%s,%s)" 
                     cur.execute(q,(d["users_id"],d["treatment"]))
                     con.commit()
@@ -389,16 +389,16 @@ def treatment(con,cur):
                     cur.execute(q,(key))
                     ans=cur.fetchone()
                     print("If you don't want to modify the column,press ENTER")
-                    d["users_id"]=input("Enter t_id")
-                    if d["users_id"]=="":
-                        d["users_id"]=ans["users_id"]
-                    d["address"]=(input("Enter t_name"))
-                    if d["address"]=="":
-                        d["address"]=ans["address"]
+                    d["t_id"]=input("Enter t_id ")
+                    if d["t_id"]=="":
+                        d["t_id"]=ans["t_id"]
+                    d["t_name"]=(input("Enter t_name "))
+                    if d["t_name"]=="":
+                        d["t_name"]=ans["t_name"]
                     q="Update treatment set t_id=%s,t_name=%s where t_id=%s" 
-                    cur.execute(q,(d["users_id"],d["address"],key))
+                    cur.execute(q,(d["t_id"],d["t_name"],key))
                     con.commit()
-                    print("Success")
+                    print("Success") 
                 except Exception as er:
                     print("Error is ",er)
             elif inp==4:
@@ -621,9 +621,9 @@ def medicine(con,cur):
                 d["m_name"]=input("Enter medicine name ")
                 d["mrp"]=float(input("Enter MRP of Medicine "))
                 d["discount"]=float(input("Enter discount(if applicable) "))
-                q="Insert into medicine values(%s,%s,%f,%f)" 
+                q="Insert into medicine values(%s,%s,%s,%s)" 
              
-                cur.execute(q,(d["m_id"],d["m_name"],d["mrp"],d["discount"]))
+                cur.execute(q,(d["m_id"],d["m_name"],float(d["mrp"]),float(d["discount"])))
                 con.commit()
                 print("Success")
             except Exception as er:
@@ -632,7 +632,7 @@ def medicine(con,cur):
             try:
                 d={}
                 key=input("Enter medicine id to modify ")
-                q="Select * from medicine where id=%s" 
+                q="Select * from medicine where m_id=%s" 
                 cur.execute(q,(key))
                 ans=cur.fetchone()
                 print("If you don't want to modify the column,press ENTER")
@@ -642,14 +642,19 @@ def medicine(con,cur):
                 d["m_name"]=input("Enter medicine name ")
                 if(d["m_name"]==""):
                     d["m_name"]=ans["m_name"]
-                d["mrp"]=float(input("Enter MRP of  medicine "))
+                mrp=(input("Enter MRP of  medicine "))
+                if mrp=="":
+                    d["mrp"]=ans["mrp"]
+                else :
+                    d["mrp"]=float(mrp)
                 if d["mrp"]=="":
                     d["mrp"]=ans["mrp"]
-                d["discount"]=float(input("Enter discount "))
-                if d["discount"]=="":
-                    d["discount"]=ans["discount"]
-                
-                q="UPDATE medicine set m_id=%s,m_name=%s,mrp=%f,discount=%f where m_id=%s" 
+                discount=(input("Enter discount "))
+                if discount=="":
+                    d["discount"]=float(ans["discount"])
+                else :
+                    d["discount"]=float(discount)
+                q="UPDATE medicine set m_id=%s,m_name=%s,mrp=%s,discount=%s where m_id=%s" 
              
                 cur.execute(q,(d["m_id"],d["m_name"],d["mrp"],d["discount"],key))
                 con.commit()
@@ -702,7 +707,7 @@ def other_workers(con,cur):
                 try:
                     d={}
                     key=input("Enter id to modify ")
-                    q="Select * from other_workers where id=%s" 
+                    q="Select * from other_workers where w_id=%s" 
                     cur.execute(q,(key))
                     ans=cur.fetchone()
                     print("If you don't want to modify the column,press ENTER")
@@ -712,10 +717,13 @@ def other_workers(con,cur):
                     d["job"]=(input("Enter job"))
                     if d["job"]=="":
                         d["job"]=ans["job"]
-                    d["salary"]=(input("Enter salary"))
-                    if d["salary"]=="":
+                    
+                    sal=(input("Enter salary"))
+                    if sal=="":
                         d["salary"]=ans["salary"]
-                    q="Update other_workers set w_id=%s,job=%s,salary=%f where users_id=%s" 
+                    else :
+                        d["salary"]=float(sal)
+                    q="Update other_workers set w_id=%s,job=%s,salary=%s where w_id=%s" 
                     cur.execute(q,(d["w_id"],d["job"],d["salary"],key))
                     con.commit()
                     print("Success")
@@ -818,3 +826,242 @@ def report2(con,cur):
             return 1
         else:
             print("Enter correct input")
+def medicalRecord(con,cur):
+    while(True):
+        print("Press 1 to see all data")
+        print("Press 2 to insert new tuple")
+        print("Press 3 to update a tuple")
+        print("Press 4 to Delete")
+        print("Press 5 to Go back")
+        inp=int(input("Enter query:-"))
+        if inp==1:
+            try:
+                    cur.execute("Select * from medicalRecord;")
+                    answer = cur.fetchall()
+                    for i in answer:
+                        print(i)
+            except Exception as er:
+                print("Error is ",er)
+        elif inp==2:
+            try:
+                d={}
+                d["p_id"]=input("Enter patient id ")
+                d["doc_id"]=input("Enter doctor id ")
+                d["m_id"]=input("Enter medicine id ")
+                d["t_id"]=input("Enter treatment id ")
+                d["disease"]=input("Enter name of disease ")
+                q="Insert into medicalRecord values(%s,%s,%s,%s,%s)" 
+             
+                cur.execute(q,(d["p_id"],d["doc_id"],d["m_id"],d["t_id"],d["disease"]))
+                con.commit()
+                print("Success")
+            except Exception as er:
+                print("Error is ",er)
+        elif inp==3:
+            try:
+                d={}
+                key1=input("Enter patient id of record to be modified ")
+                key2=input("Enter doctor id of record to be modified ")
+                key3=input("Enter medicine id of record to be modified ")
+                key4=input("Enter treatment id of record to be modified ")
+                q="Select * from medicalRecord where p_id=%s and doc_id=%s and m_id=%s and t_id=%s  " %(key1,key2,key3,key4)
+                cur.execute(q)
+                ans=cur.fetchone()
+                print("If you don't want to modify the column,press ENTER")
+                d["p_id"]=input("Enter patient id ")
+                if(d["p_id"]==""):
+                    d["p_id"]=ans["p_id"]
+                d["doc_id"]=input("Enter doctor id ")
+                if(d["doc_id"]==""):
+                    d["doc_id"]=ans["doc_id"]
+                d["m_id"]=input("Enter medicine id of doctor ")
+                if d["m_id"]=="":
+                    d["m_id"]=ans["m_id"]
+                d["t_id"]=input("Enter t_id ")
+                if d["t_id"]=="":
+                    d["t_id"]=ans["t_id"]
+                d["disease"]=input("Enter disease ")
+                if d["disease"]=="":
+                    d["disease"]=ans["disease"]
+                
+                q="UPDATE medicalRecord set p_id=%s,doc_id=%s,m_id=%s,t_id=%s,disease=%s where p_id=%s and doc_id=%s and m_id=%s and t_id=%s" 
+             
+                cur.execute(q,(d["p_id"],d["doc_id"],d["m_id"],d["t_id"],d["disease"],key1,key2,key3,key4))
+                con.commit()
+                print("Success")
+            except Exception as er:
+                print("Error is ",er)
+        elif inp==4:
+            
+            try:
+                    key1=input("Enter patient id of record to be modified ")
+                    key2=input("Enter doctor id of record to be modified ")
+                    key3=input("Enter medicine id of record to be modified ")
+                    key4=input("Enter treatment id of record to be modified ")
+                    q="Delete from medicalRecord where p_id=%s and doc_id=%s and m_id=%s and t_id=%s" 
+                    cur.execute(q,(key1,key2,key3,key4))
+                    con.commit()
+                    print("Success")
+            except Exception as er:
+                print("Error is ",er)
+        elif inp==5:
+            return 1
+        else :
+            print("Enter correct input")
+
+def doctor(con,cur):
+    while(True):
+        print("Press 1 to see all data")
+        print("Press 2 to insert new tuple")
+        print("Press 3 to update a tuple")
+        print("Press 4 to Delete")
+        print("Press 5 to get Max salary")
+        print("Press 6 to get doctors ordered via each department")
+        print("Press 7 to Go back")
+        inp=int(input("Enter query:-"))
+        if inp==1:
+            try:
+                    cur.execute("Select * from doctor;")
+                    answer = cur.fetchall()
+                    for i in answer:
+                        print(i)
+            except Exception as er:
+                print("Error is ",er)
+        elif inp==2:
+            try:
+                d={}
+                d["doc_id"]=input("Enter doctor id ")
+                d["doc_ssn"]=input("Enter doctor ssn ")
+                d["dep_id"]=input("Enter department id ")
+                d["salary"]=input("Enter salary ")
+                q="Insert into doctor values(%s,%s,%s,%s)" 
+             
+                cur.execute(q,(d["doc_id"],d["doc_ssn"],d["dep_id"],d["salary"]))
+                con.commit()
+                print("Success")
+            except Exception as er:
+                print("Error is ",er)
+        elif inp==3:
+            try:
+                d={}
+                key=input("Enter doctor id to modify ")
+                q="Select * from doctor where doc_id=%s" %(key)
+                cur.execute(q)
+                ans=cur.fetchone()
+                print("If you don't want to modify the column,press ENTER")
+                d["doc_id"]=input("Enter doctor id ")
+                if(d["doc_id"]==""):
+                    d["doc_id"]=ans["doc_id"]
+                d["doc_ssn"]=input("Enter doctor's ssn ")
+                if(d["doc_ssn"]==""):
+                    d["doc_ssn"]=ans["doc_ssn"]
+                d["dep_id"]=input("Enter department id of doctor ")
+                if d["dep_id"]=="":
+                    d["dep_id"]=ans["dep_id"]
+                d["salary"]=input("salary ")
+                if d["salary"]=="":
+                    d["salary"]=ans["salary"]
+                
+                q="UPDATE doctor set doc_id=%s,doc_ssn=%s,dep_id=%s,salary=%s where doc_id=%s" 
+             
+                cur.execute(q,(d["doc_id"],d["doc_ssn"],d["dep_id"],d["salary"],key))
+                con.commit()
+                print("Success")
+            except Exception as er:
+                print("Error is ",er)
+        elif inp==4:
+            
+            try:
+                    key=input("Enter doctor id to delete ")
+                    q="Delete from doctor where doc_id=%s" 
+                    cur.execute(q,(key))
+                    con.commit()
+                    print("Success")
+            except Exception as er:
+                print("Error is ",er)
+        elif inp==5:
+            try:
+                q="select MAX(salary) from doctor"
+                cur.execute(q)
+                answer = cur.fetchall()
+                for i in answer:
+                        print(i)
+            except Exception as er:
+                print("Error is ",er)    
+        elif inp==6:
+            try:
+                key=input("Enter department id ")
+                q="Select doc_id,first_name,last_name,salary,doc_ssn,dep_id from ((Select * from doctor) AS A INNER JOIN (Select * from users) as B ON A.doc_id=B.id) where dep_id=%s;"
+                cur.execute(q,(key))
+                answer = cur.fetchall()
+                for i in answer:
+                        print(i)
+            except Exception as er:
+                print("Error is ",er)   
+        elif inp==7:
+            return 1
+        else :
+            print("Enter correct input")
+
+
+def department(con,cur):
+    while(True):
+            print("Press 1 to see all data")
+            print("Press 2 to insert new tuple")
+            print("Press 3 to update a tuple")
+            print("Press 4 to Delete")
+            print("Press 5 to Go back")
+            inp=int(input("Enter query:-"))
+            if inp==1:
+                try:
+                        cur.execute("Select * from department;")
+                        answer = cur.fetchall()
+                        for i in answer:
+                            print(i)
+                except Exception as er:
+                    print("Error is ",er)
+            elif inp==2:
+                try:
+                    d={}
+                    d["dep_id"]=input("Enter department id ")
+                    d["dep_name"]=(input("Enter department name "))
+                    q="Insert into department values(%s,%s)" 
+                    cur.execute(q,(d["dep_id"],d["dep_name"]))
+                    con.commit()
+                    print("Success")
+                except Exception as er:
+                    print("Error is ",er)
+            elif inp==3:
+                try:
+                    d={}
+                    key=input("Enter dep_id to modify ")
+                    q="Select * from department where dep_id=%s" 
+                    cur.execute(q,(key))
+                    ans=cur.fetchone()
+                    print("If you don't want to modify the column,press ENTER")
+                    d["dep_id"]=input("Enter dep_id ")
+                    if d["dep_id"]=="":
+                        d["dep_id"]=ans["dep_id"]
+                    d["dep_name"]=(input("Enter dep_name "))
+                    if d["dep_name"]=="":
+                        d["dep_name"]=ans["dep_name"]
+                    q="Update department set dep_id=%s,dep_name=%s where dep_id=%s" 
+                    cur.execute(q,(d["dep_id"],d["dep_name"],key))
+                    con.commit()
+                    print("Success") 
+                except Exception as er:
+                    print("Error is ",er)
+            elif inp==4:
+                try:
+                    d={}
+                    key=input("Enter id to modify ")
+                    q="Delete from department where dep_id=%s" 
+                    cur.execute(q,(key))
+                    con.commit()
+                    print("Success")
+                except Exception as er:
+                    print("Error is ",er)
+            elif inp==5:
+                return 1
+            else :
+                print("Enter correct input")
