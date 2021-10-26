@@ -486,8 +486,8 @@ def patient(con,cur):
             elif inp==5:
                 try:
                     key=input("Enter key to search")
-                    q= "Select first_name  FROM ((Select * from users  ) as A INNER JOIN (Select * from patient ) as B ON A.id=B.p_id) where first_name like '%%%s%%' " 
-                    cur.execute(q,(key))
+                    q= "Select first_name  FROM ((Select * from users  ) as A INNER JOIN (Select * from patient ) as B ON A.id=B.p_id) where first_name like '%s%%' "  % (key)
+                    cur.execute(q)
                     answer = cur.fetchall()
                     for i in answer:
                             print(i)
@@ -496,8 +496,8 @@ def patient(con,cur):
             elif inp==6:
                 try:
                     key=input("Enter key to search")
-                    q= "Select id,address  FROM ((Select * from address_users )as C INNER JOIN(Select * from users  ) as A INNER JOIN (Select * from patient ) as B ON A.id=B.p_id ON A.id=C.users_id) where address like %'%s'% "
-                    cur.execute(q,(key))
+                    q= "Select id,address  FROM ((Select * from address_users )as C INNER JOIN(Select * from users  ) as A INNER JOIN (Select * from patient ) as B ON A.id=B.p_id ON A.id=C.users_id) where address like '%%%s%%'  " %(key)
+                    cur.execute(q)
                     answer = cur.fetchall()
                     for i in answer:
                             print(i)
@@ -505,7 +505,7 @@ def patient(con,cur):
                     print("Error is ",er)
             elif inp==7:
                 try:
-                    key=input("Enter adm_date to search")
+                    key=input("Enter adm_date to search in YYYY/MM/DD format")
                     q= "Select * from patient where adm_date>=%s"
                     cur.execute(q,(key))
                     answer = cur.fetchall()
